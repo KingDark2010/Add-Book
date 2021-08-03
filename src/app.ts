@@ -20,13 +20,17 @@ class UI {
                             <td>${book.author}</td>
                             <td>${book.isbn}</td>
                             <td>
-                                <a class="waves-effect waves-light delete"><i class="small material-icons ">delete_forever</i></a>
+                                <a class="waves-effect waves-light"><i class="small material-icons delete">delete_forever</i></a>
                             </td>`;
         // append the table to the book list
         bookList.appendChild(tableRw);
     }
-/*     removeBook(target) {
-    } */
+    removeBook(target) {
+        if (target.classList.contains('delete')) {
+            // remove the book from the list
+            target.parentElement.parentElement.parentElement.remove();
+        }
+    }
     showAlert(message, className) {
         //create a new alert element
         const alert = document.createElement('div');
@@ -55,7 +59,7 @@ document.querySelector('.form').addEventListener('submit', (event) => {
     const titleValue = title.value;
     const authorValue = author.value;
     const isbnValue = isbn.value;
-    console.log(titleValue, authorValue, isbnValue);
+    
     //check if the form is valid
     if (titleValue === '' || authorValue === '' || isbnValue === '') {
         //show alert
@@ -73,7 +77,7 @@ document.querySelector('.form').addEventListener('submit', (event) => {
             if (bookListItemIsbn === book.isbn) {
                 existInLinst = true;
                 const ui = new UI();
-                ui.showAlert('the isbn already exist', 'warning');
+                ui.showAlert('the ISBN already exist', 'warning');
             }
         }
         if (existInLinst === false){
@@ -81,11 +85,18 @@ document.querySelector('.form').addEventListener('submit', (event) => {
             const book = new Book(titleValue, authorValue, isbnValue);
             //add the book to the list
             const ui = new UI();
-            ui.showAlert('the isbn already exist', 'success');
+            ui.showAlert('the book is Added', 'success');
             ui.addBook(book);
             //clear the form
             ui.clearForm();
         }
     }
     event.preventDefault();
+});
+
+document.querySelector('.book-list').addEventListener('click', (event) => { 
+    const target = event.target as HTMLElement;
+    const ui = new UI();
+    ui.removeBook(target);
+    ui.showAlert('Book was successfully deleted', 'success');
 });
